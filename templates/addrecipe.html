@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-      
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<style>
+.input-wrapper div {
+    margin-bottom: 10px;
+}
+.remove-input {
+    margin-top: 10px;
+    margin-left: 15px;
+    vertical-align: text-bottom;
+}
+.add-input {
+    margin-top: 10px;
+    margin-left: 10px;
+    vertical-align: text-bottom;
+}
+</style>
+<div>
     {% if recipe_title %}
         <h1>new recipe {{ recipe_title }} created.</h1>
     {% else %}
@@ -8,12 +24,49 @@
         <br/>
         <form method="POST">
             {{ form.hidden_tag() }}
+
             {{ form.recipe_title.label(class="form-label") }}
             {{ form.recipe_title(class="form-control") }}
+
+            <div class="input-wrapper">
+            {% for ingredient_form_entry in form.ingredients %}
+                {{ ingredient_form_entry.label }}
+                {{ ingredient_form_entry }}
+            {% endfor %}
+            <a href="javascript:void(0);" class="add-input" title="Add Ingredient">+</a>
+            </div>
+            <br/>
+            {% for instr_form_entry in form.recipe_instr %}
+                {{ instr_form_entry.label }}
+                <br/>
+                {{ instr_form_entry }}
+            {% endfor %}
             <br/>
             {{ form.create_recipe(class="btn btn-secondary") }}
         </form>
     
     {% endif %}
+</div>
+
+<script>
+    $(document).ready(function(){
+        var max_input_fields = 50;
+        var add_input = $('.add-input');
+        var input_wrapper = $('.input-wrapper');
+        var new_input = '<div>{% for ingredient_form_entry in form.ingredients %}{{ ingredient_form_entry.label }}{{ ingredient_form_entry }}{% endfor %}<a href="javascript:void(0);" class="remove-input" title="Remove input">-</a></div>';
+        var add_input_count = 1; 
+        $(add_input).click(function(){
+            if(add_input_count < max_input_fields){
+                add_input_count++; 
+                $(input_wrapper).append(new_input); 
+            }
+        });
+        $(input_wrapper).on('click', '.remove-input', function(e){
+            e.preventDefault();
+            $(this).parent('div').remove();
+            add_input_count--;
+        });
+    });
+    </script>
 
 {% endblock %}

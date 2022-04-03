@@ -22,7 +22,7 @@ def add_recipe():
   if form.validate_on_submit():
     recipe_title = form.recipe_title.data
     form.recipe_title.data = ""
-  return render_template("addrecipe.html", recipe_title = recipe_title, form = form)
+  return render_template("addrecipe.html", recipe_title = recipe_title, ing_lst = ingredients, recipe_instr_lst = recipe_instr, form = form)
 
 # create custom error pages
 # invalid url
